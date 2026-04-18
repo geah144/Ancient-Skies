@@ -1,0 +1,349 @@
+{
+  "siberian": {
+    "name": "Siberian Great Hunt",
+    "startMonth": 9,
+    "months": [
+      {
+        "number": 1,
+        "calendarMonth": "September",
+        "text": "As autumn arrives and the first leaves begin to turn, the three hunters spot their quarry. The Great Elk stands proud in the northern sky—seven bright stars forming its massive body and proud antlers. The eldest hunter raises his bow. The chase begins."
+      },
+      {
+        "number": 2,
+        "calendarMonth": "October",
+        "text": "The hunters drive the Elk westward across the dome of heaven. Night after night, they draw closer. The Elk's path traces lower toward the horizon as it flees the relentless pursuit. The hunters know they must strike before winter's darkness gives it refuge."
+      },
+      {
+        "number": 3,
+        "calendarMonth": "November",
+        "text": "The arrow finds its mark! The Elk stumbles, and its blood begins to fall. Where the blood touches the earth, leaves turn brilliant red and orange. The maples and birches blaze with the Elk's life force. The forest becomes a tapestry of autumn fire."
+      },
+      {
+        "number": 4,
+        "calendarMonth": "December",
+        "text": "Wounded, the Great Elk struggles on through the darkest nights of the year. The hunters pursue it to the very edge of the world. On the longest night, the Elk finally sinks below the horizon, disappearing into the underworld to begin its journey of death and rebirth."
+      },
+      {
+        "number": 5,
+        "calendarMonth": "January",
+        "text": "The Elk walks in the land of shadows. Above, the hunters wait and watch. The stars grow cold without their quarry. In the deepest winter, death holds dominion—but even in darkness, the seeds of spring wait beneath the frozen ground."
+      },
+      {
+        "number": 6,
+        "calendarMonth": "February",
+        "text": "As winter weakens its grip, the first signs of the Elk's return appear. Just before dawn, the tip of one antler breaks the horizon—a promise of resurrection. The hunters prepare, for they know the cycle will turn again."
+      },
+      {
+        "number": 7,
+        "calendarMonth": "March",
+        "text": "The Elk is reborn! Whole and vital, it leaps up from the underworld into the northern sky. The hunters watch as their quarry returns to strength, climbing higher with each passing night. Life returns to the land—ice melts, waters flow, and the earth awakens."
+      },
+      {
+        "number": 8,
+        "calendarMonth": "April",
+        "text": "Young and powerful again, the Great Elk climbs toward the zenith. The hunters lose sight of it in the heights of heaven. Spring bursts forth—birds return, green shoots pierce the soil, and the world is reborn alongside the Elk."
+      },
+      {
+        "number": 9,
+        "calendarMonth": "May",
+        "text": "The Elk stands triumphant at the dome of the sky, master of the heavens. The hunters rest and wait, watching their quarry graze among the stars. But they know that height precedes the fall. Summer's abundance masks autumn's inevitability."
+      },
+      {
+        "number": 10,
+        "calendarMonth": "June",
+        "text": "The days grow long, but the Elk has reached its peak. Imperceptibly at first, it begins its descent. The hunters ready their weapons once more. On the longest day, the sun's power breaks—and the Elk's fate is sealed again."
+      },
+      {
+        "number": 11,
+        "calendarMonth": "July",
+        "text": "The Great Elk moves westward and downward, completing its arc across the heavens. The hunters follow, patient and inexorable. They have done this since the beginning of time. They will do it until time's end."
+      },
+      {
+        "number": 12,
+        "calendarMonth": "August",
+        "text": "The Elk runs low across the northern sky. The hunters close in for another year's kill. Soon the leaves will turn again—red with spilled blood, gold with fading light. The eternal cycle prepares to turn once more. In one moon, the arrow will fly again."
+      }
+    ]
+  },
+  "greek": {
+    "name": "Greek Perseus Cycle",
+    "startMonth": 4,
+    "months": [
+      {
+        "number": 1,
+        "calendarMonth": "April",
+        "text": "In the palace of Aethiopia, Queen Cassiopeia makes a fateful boast. 'My daughter Andromeda is more beautiful than the Nereids themselves!' she proclaims. The sea nymphs hear her words and burn with fury. They petition Poseidon for vengeance. The god of the sea listens—and sends forth his monster."
+      },
+      {
+        "number": 2,
+        "calendarMonth": "May",
+        "text": "Cetus rises from the depths. The sea monster ravages the coastline, destroying ships and devouring fishermen. King Cepheus consults the oracle in desperation. The answer is cruel: only the sacrifice of Princess Andromeda will appease the god's wrath. The chains are prepared."
+      },
+      {
+        "number": 3,
+        "calendarMonth": "June",
+        "text": "Far to the west, Perseus accepts an impossible quest. King Polydectes demands the head of Medusa—the Gorgon whose gaze turns men to stone. It is a mission meant to kill him. But the gods favor the young hero. Athena grants him her polished shield. Hermes brings winged sandals. The hunt begins."
+      },
+      {
+        "number": 4,
+        "calendarMonth": "July",
+        "text": "Perseus finds the Gray Sisters, ancient crones who share a single eye between them. He seizes their eye and refuses to return it until they reveal Medusa's location. Reluctantly, they tell him of the garden at the edge of the world where the Gorgons sleep among stone statues—men who looked upon Medusa and died."
+      },
+      {
+        "number": 5,
+        "calendarMonth": "August",
+        "text": "In the garden of stone, Perseus creeps forward, watching Medusa's reflection in his polished shield. Her serpent hair writhes. Her sisters sleep nearby. He strikes once, perfectly, and the head falls. From Medusa's blood springs Pegasus, the winged horse. Perseus mounts and flies eastward, the Gorgon's head sealed in his bag."
+      },
+      {
+        "number": 6,
+        "calendarMonth": "September",
+        "text": "The stars wheel overhead as Perseus flies across the sea. Below, on a coastal cliff, he sees a maiden chained to the rocks. Andromeda stands alone, waiting for the monster. The waters begin to churn. Cetus rises, jaws wide. Perseus descends like lightning from the sky."
+      },
+      {
+        "number": 7,
+        "calendarMonth": "October",
+        "text": "The battle is joined! Perseus and Cetus clash in spray and starlight. The hero strikes again and again, but the monster's hide is thick. Finally, Perseus reaches into his bag and draws forth the Gorgon's head. Even dead, Medusa's power remains. Cetus looks upon her face and turns to stone, sinking forever beneath the waves."
+      },
+      {
+        "number": 8,
+        "calendarMonth": "November",
+        "text": "Andromeda is freed. Cassiopeia's boast is answered—her daughter lives, but her pride has cost the kingdom dearly. Perseus claims his bride, and they are wed beneath the autumn stars. But King Cepheus' brother Phineus, who was promised Andromeda's hand, arrives with an army to dispute the marriage."
+      },
+      {
+        "number": 9,
+        "calendarMonth": "December",
+        "text": "In the wedding hall, Phineus and his men draw swords. They are two hundred strong. Perseus stands alone. For the second time, he reaches for the Gorgon's head. 'Those who are my friends, turn away your eyes!' he shouts—and unveils Medusa's face. Two hundred men become two hundred statues in an instant."
+      },
+      {
+        "number": 10,
+        "calendarMonth": "January",
+        "text": "Perseus returns home to Argos with his bride, but finds King Polydectes has persecuted his mother Danaë in his absence. The king sits in his throne room, surrounded by his court, and mocks the hero's return. 'Where is this Gorgon's head you promised?' Perseus smiles grimly. 'Here,' he says—and shows them. The tyrant's court becomes a gallery of stone."
+      },
+      {
+        "number": 11,
+        "calendarMonth": "February",
+        "text": "The hero's quest is complete, but the gods are not finished with these mortals. Poseidon, still angered by Cassiopeia's pride, places the boastful queen among the stars—bound to a throne that circles the celestial pole, spending half the year upside down in humiliation. Cepheus is set nearby, crowned but powerless to help his wife."
+      },
+      {
+        "number": 12,
+        "calendarMonth": "March",
+        "text": "One by one, the players in this cosmic drama are lifted to the heavens. Andromeda takes her place among the stars, forever rescued, forever the prize. Perseus rises with her, sword raised, victorious. Cetus lurks below the horizon. Pegasus flies eternal. Even the Gray Sisters' wisdom is remembered. The wheel turns, and in the spring, Cassiopeia's boast will echo again."
+      }
+    ]
+  },
+  "egyptian": {
+    "name": "Egyptian Sky",
+    "startMonth": 7,
+    "months": [
+      {
+        "number": 1,
+        "calendarMonth": "July",
+        "title": "The Rising of Sopdet",
+        "text": "On the horizon before dawn, Sopdet appears—the star we call Sirius, brightest jewel in the sky. Her heliacal rising heralds the inundation. Within days, the Nile will flood, bringing life-giving silt to the fields. This is Akhet, the season of inundation. This is the beginning of the year. The goddess Isis returns from her mourning."
+      },
+      {
+        "number": 2,
+        "calendarMonth": "August",
+        "text": "The Nile swells and spreads across the land. In the sky, Osiris (whom the Greeks call Orion) rises in the east. The great god stands tall, his belt of three stars marking his divine majesty. He is lord of the afterlife, murdered by his brother Set, mourned by Isis, and now reborn among the stars to judge the dead."
+      },
+      {
+        "number": 3,
+        "calendarMonth": "September",
+        "text": "The waters reach their peak. Sopdet (Sirius) and Sah (Orion) climb higher together in the pre-dawn sky—Isis and Osiris reunited. Their celestial union mirrors the sacred marriage that brings fertility to the land. The stars are brilliant, undimmed by moonlight. The soul of Pharaoh watches from among the Imperishable Ones."
+      },
+      {
+        "number": 4,
+        "calendarMonth": "October",
+        "text": "The floodwaters begin to recede, leaving behind rich black soil. This is the gift of the Nile, the gift of the gods. As the land emerges from the waters, so too did the primordial mound emerge from the chaos at creation. Sah walks across the southern sky, his journey mirroring the sun's daily rebirth."
+      },
+      {
+        "number": 5,
+        "calendarMonth": "November",
+        "title": "Peret Begins",
+        "text": "Peret, the season of emergence. The fields are ready. Farmers plant barley and emmer wheat in the fertile mud. In the sky, Sah reaches his zenith at midnight—Osiris at the height of his power. The constellation stands upright, his arm raised, eternal and unchanging. Death is not an end. The righteous join him in the Field of Reeds."
+      },
+      {
+        "number": 6,
+        "calendarMonth": "December",
+        "text": "The crops grow strong. By night, the Milky Way stretches overhead—the celestial Nile, the waterway of heaven. The souls of the justified dead sail this river in reed boats, traveling between the worlds. Sopdet shines brilliant in the southern sky. Isis watches over the growing things."
+      },
+      {
+        "number": 7,
+        "calendarMonth": "January",
+        "text": "The barley ripens. Sah begins his descent toward the western horizon, just as the sun sets in the west each day. This is the pattern: rising in the east like birth, culminating at the zenith like life's peak, setting in the west like death. But the cycle continues. Sah will rise again tomorrow. The dead will live again."
+      },
+      {
+        "number": 8,
+        "calendarMonth": "February",
+        "text": "The harvest approaches. Sah sinks lower in the west after sunset. The constellation of Osiris prepares to enter the Duat, the underworld, where he rules as king of the dead. For seventy days, he will walk in darkness—the same seventy days required for mummification. Death and transformation are one."
+      },
+      {
+        "number": 9,
+        "calendarMonth": "March",
+        "title": "Shemu Begins",
+        "text": "Shemu, the season of harvest. The grain is cut and gathered. Sah disappears into the western horizon, entering the underworld. For two months, Osiris will be invisible, lost in the sun's glare. This is his death, his dissolution. But the wise know: what is hidden is not gone. What descends will rise again."
+      },
+      {
+        "number": 10,
+        "calendarMonth": "April",
+        "text": "The land grows hot and dry. The Nile is at its lowest. Sah remains invisible, traveling through the Duat. The soul of Osiris undergoes judgment and transformation in the Hall of Two Truths. His heart is weighed against the feather of Ma'at. The righteous pass through. The wicked are devoured."
+      },
+      {
+        "number": 11,
+        "calendarMonth": "May",
+        "text": "The heat intensifies. The season of drought. Yet even now, the Nile's rise is preparing in the distant mountains. Even now, Sah is completing his journey through the underworld. The pattern holds. What was will be again. In the darkness before dawn, the keen-eyed can glimpse Sopdet returning to the horizon."
+      },
+      {
+        "number": 12,
+        "calendarMonth": "June",
+        "text": "The year comes full circle. The land waits, parched and expectant. In the underworld, Osiris completes his transformation. Soon Sopdet will rise again before the sun. Soon the Nile will flood again. Soon the cycle will begin anew. Death leads to life. The ending is the beginning. The stars are eternal."
+      }
+    ]
+  },
+  "chinese": {
+    "name": "Chinese Sky",
+    "startMonth": 2,
+    "months": [
+      {
+        "number": 1,
+        "calendarMonth": "February",
+        "title": "Spring Festival",
+        "text": "The new year dawns with fireworks and reunion. Families gather under the stars of the Purple Forbidden Enclosure, the celestial palace of the Jade Emperor. High overhead, Zhinü the Weaver Girl tends her loom among the stars, creating clouds and celestial garments. Across the Silver River, Niulang the Cowherd watches her work, separated by the Milky Way's vast current."
+      },
+      {
+        "number": 2,
+        "calendarMonth": "March",
+        "text": "Spring arrives. The Azure Dragon of the East rises in the evening sky, guardian of spring and new growth. The Weaver Girl and Cowherd remain on opposite banks of the heavenly river. Once they were mortal lovers who neglected their duties—she her weaving, he his oxen. The gods punished them with eternal separation."
+      },
+      {
+        "number": 3,
+        "calendarMonth": "April",
+        "text": "The rice is planted. Zhinü sits at her celestial loom, the bright star Vega shining with steady light. She weaves without cease, fulfilling the punishment laid upon her. Niulang tends his celestial herd, the star Altair gleaming across the river. Between them flows the Silver River, impassable and eternal—or so it seems."
+      },
+      {
+        "number": 4,
+        "calendarMonth": "May",
+        "text": "The days grow long. The Dragon's stars climb higher. On earth, silkworms spin their cocoons. In heaven, the Weaver Girl's shuttle flies back and forth, creating the very fabric of the sky. Her loneliness is profound. Once a year—only once—the gods show mercy."
+      },
+      {
+        "number": 5,
+        "calendarMonth": "June",
+        "text": "Summer heat arrives. The Vermillion Bird of the South guards the southern sky. Vega shines brilliant in the east after sunset. Altair rises later, following his beloved across the heavens. The magpies of earth begin to gather, sensing what is to come. In one month, they will build their bridge."
+      },
+      {
+        "number": 6,
+        "calendarMonth": "July",
+        "text": "The seventh month approaches. Throughout the Middle Kingdom, young women make offerings to Zhinü, praying for skill in needlework and weaving. Vega reaches higher in the evening sky. Altair follows. The distance between them seems to shrink, though the Silver River still flows wide and impassable."
+      },
+      {
+        "number": 7,
+        "calendarMonth": "August",
+        "title": "Qixi Festival (7th day of 7th month)",
+        "text": "The night of reunion! Every magpie in the world takes flight, ascending to the heavens to form a bridge across the Milky Way. Zhinü and Niulang meet in the middle, embracing for the first time in a year. For this single night, love conquers separation. Vega and Altair shine brightest, closest together in the sky. By dawn, the magpies disperse. The lovers part. Another year of longing begins."
+      },
+      {
+        "number": 8,
+        "calendarMonth": "September",
+        "text": "Autumn arrives. The White Tiger of the West rises in the evening. Vega and Altair begin their slow separation in the sky, the angle between them widening night by night. The harvest moon shines full and bright. On earth, families gather for the Mid-Autumn Festival, celebrating reunion—but in heaven, the lovers return to their solitary vigils."
+      },
+      {
+        "number": 9,
+        "calendarMonth": "October",
+        "text": "The leaves turn gold and red. Vega sets earlier each night in the west. Altair follows hours later, always chasing, never reaching. The Weaver Girl returns to her loom with renewed dedication, though tears fall like starlight. The Cowherd tends his herd, counting the days until next summer."
+      },
+      {
+        "number": 10,
+        "calendarMonth": "November",
+        "text": "Winter's approach. The Black Tortoise of the North guards the northern sky. Vega sinks low in the northwest after sunset. Altair shines in the southwest. The Silver River flows between them, glittering and cold. The celestial bureaucracy is implacable. The punishment continues. But hope remains—next summer will come."
+      },
+      {
+        "number": 11,
+        "calendarMonth": "December",
+        "text": "The year grows old. Vega sets shortly after the sun, barely visible in the twilight. Altair follows suit. The lovers are lost in the sun's glare, invisible to mortal eyes. Yet even in darkness, they endure. The pattern holds. What was separated will meet again. The wheel of heaven turns inexorably toward reunion."
+      },
+      {
+        "number": 12,
+        "calendarMonth": "January",
+        "text": "The coldest month. Preparations begin for Spring Festival. Vega and Altair remain hidden in the sun's glow, but the astronomers know they are rising again before dawn, beginning their slow return to the evening sky. In six months, the magpies will fly again. In six months, love will triumph for one brief, perfect night. The cycle continues, eternal as the stars."
+      }
+    ]
+  },
+  "babylonian": {
+    "name": "Babylonian Sky",
+    "startMonth": 3,
+    "months": [
+      {
+        "number": 1,
+        "calendarMonth": "March/April",
+        "title": "Nisannu (Akitu Festival)",
+        "text": "The new year begins at the spring equinox. In Babylon, the Akitu festival celebrates Marduk's victory over Tiamat and the renewal of the world. In the pre-dawn sky, the Pleiades—the Seven Stars—rise heliacally, marking the true beginning of the year. MUL.MUL, the star cluster, returns like a promise. The heavens are a divine tablet written by the gods themselves."
+      },
+      {
+        "number": 2,
+        "calendarMonth": "April/May",
+        "title": "Ayaru",
+        "text": "The Bull of Heaven stands magnificent in the evening sky. GU.AN.NA—the constellation we call Taurus—guards the gateway between earth and heaven. Bright Aldebaran burns like a red eye. This is the bull that Ishtar commanded to punish Gilgamesh, the bull that ravaged Uruk. In the Epic, the heroes slay it. In the sky, it stands eternal."
+      },
+      {
+        "number": 3,
+        "calendarMonth": "May/June",
+        "title": "Simanu",
+        "text": "The star MUL.SIPA.ZI.AN.NA—the True Shepherd of Anu, whom the Greeks call Orion—rises in the east before dawn. The great hunter of heaven. Three stars mark his belt, a line of divine perfection. The priests record his position. The scribes consult the MUL.APIN tablets. The movements of heaven foretell the fate of kings."
+      },
+      {
+        "number": 4,
+        "calendarMonth": "June/July",
+        "title": "Du'uzu",
+        "text": "The summer heat. The constellation of the Lion—UR.GU.LA—dominates the evening sky. Leo the Lion, fierce guardian. The star Regulus shines at its heart, royal and bright. In the Epic of Gilgamesh, the hero and Enkidu slay the celestial bull, but even heroes cannot kill the stars. The gods' writing remains."
+      },
+      {
+        "number": 5,
+        "calendarMonth": "July/August",
+        "title": "Abu",
+        "text": "The Furrow—AB.SIN, which the Greeks name Virgo—appears in the evening. The goddess Shala, consort of the storm god Adad, presides over grain and harvest. Her brightest star Spica marks the ear of wheat. The barley is gathered. The astronomers watch. Every celestial omen is recorded on clay tablets for the king's advisors."
+      },
+      {
+        "number": 6,
+        "calendarMonth": "August/September",
+        "title": "Ululu",
+        "text": "The Balance—ZI.BA.AN.NA, the scales of heaven. The sun reaches the autumn equinox, day and night in perfect equilibrium. Shamash the sun god weighs justice in his balance. The year pivots. The MUL.APIN star catalog is consulted. Which stars rise when the sun sets? Which constellations mark the changing seasons?"
+      },
+      {
+        "number": 7,
+        "calendarMonth": "September/October",
+        "title": "Tashritu",
+        "text": "The Scorpion—GIR.TAB—crawls across the southern horizon. Its bright heart is Antares, red as blood. In the Epic of Gilgamesh, scorpion-people guard the gates of the mountain where the sun rises and sets. The constellation marks boundaries, thresholds between worlds. The priests watch for omens. The position of stars determines fates."
+      },
+      {
+        "number": 8,
+        "calendarMonth": "October/November",
+        "title": "Arahsamnu",
+        "text": "The Bow—PA.BIL.SAG, the defender—rises in the evening. The Greeks will call this Sagittarius. The archer aims his arrow at the heart of the Scorpion. These are the wars of heaven, played out eternally in the stars. The constellations are gods, are stories, are warnings written across the dark."
+      },
+      {
+        "number": 9,
+        "calendarMonth": "November/December",
+        "title": "Kislimu",
+        "text": "The Goat-Fish—SUHUR.MASH—appears in the southern sky. Capricorn, creature of two realms: mountain goat above, fish below. Born of the Apsu, the sweet water beneath the earth. Ea, god of wisdom, takes this form. The winter solstice approaches. The sun reaches its lowest point and begins its return."
+      },
+      {
+        "number": 10,
+        "calendarMonth": "December/January",
+        "title": "Tebetu",
+        "text": "Midwinter. The Great One—GU.LA, Aquarius—pours the waters of heaven. The winter rains fall. The Tigris and Euphrates swell with distant snowmelt. In the predawn sky, the True Shepherd (Orion) stands tall again. The year wheels through its appointed course, as the gods decreed at creation."
+      },
+      {
+        "number": 11,
+        "calendarMonth": "January/February",
+        "title": "Shabatu",
+        "text": "The Tails—DU.NU.NU, the two fishes bound together—swim in the evening sky. Pisces, children of the goddess Atargatis. The rains continue. The fields soften, ready for planting. The astronomers compile their observations. Every star's rising, every planet's path, every omen—all recorded on clay for eternity."
+      },
+      {
+        "number": 12,
+        "calendarMonth": "February/March",
+        "title": "Adaru",
+        "text": "The final month. The Hired Man—LU.HUN.GA, Aries—prepares the fields for planting. The ram with the golden fleece, herald of spring's return. Soon the Pleiades will rise again at dawn. Soon the new year will begin again at Akitu. The heavens turn, eternal and unchanging. The gods have written fate in fire across the night."
+      }
+    ]
+  }
+}
