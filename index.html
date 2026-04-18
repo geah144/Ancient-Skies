@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ancient Skies - Star Mythology Across Cultures</title>
+    
+    <!-- d3-celestial dependencies -->
+    <script src="lib/d3.min.js"></script>
+    <script src="lib/d3.geo.projection.min.js"></script>
+    <script src="celestial.min.js"></script>
+    <script src="star-highlights.js"></script>
+    <link rel="stylesheet" href="celestial.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'EB Garamond', Georgia, serif;
+            background: #0a0a0f;
+            color: #e8e8e8;
+            overflow: hidden;
+        }
+
+        #app-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Title overlay — top-left of sky canvas */
+        #sky-title-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        #sky-title-text {
+            font-family: 'Cinzel', serif;
+            font-size: 1.32em;
+            color: #6ba3ff;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(107, 163, 255, 0.3);
+            margin-bottom: 3px;
+        }
+
+        .sky-tagline {
+            font-size: 0.72em;
+            color: #c8a96e;
+            font-style: italic;
+            font-weight: 600;
+            margin-bottom: 8px;
+            max-width: 300px;
+            line-height: 1.3;
+        }
+
+        /* Main sky view */
+        #sky-container {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(ellipse at center, #0a0a14 0%, #000000 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #celestial-map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Cardinal direction indicators */
+        .cardinal-direction {
+            position: absolute;
+            font-family: 'Cinzel', serif;
+            font-size: 2.02rem;
+            font-variant: small-caps;
+            color: rgba(107, 163, 255, 0.4);
+            pointer-events: none;
+            letter-spacing: 0.05em;
+            z-index: 10;
+        }
+        #cardinal-n { top: 12px; left: 50%; transform: translateX(-50%); }
+        #cardinal-s { bottom: 12px; left: 50%; transform: translateX(-50%); }
+        #cardinal-e { left: 12px; top: 50%; transform: translateY(-50%); }
+        #cardinal-w { right: 12px; top: 50%; transform: translateY(-50%); }
+
+        /* Month progression controls */
+        #time-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.9);
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: 1px solid #2a2a3e;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            z-index: 50;
+        }
+
+        #time-controls button {
+            background: rgba(107, 163, 255, 0.2);
+            border: 1px solid #4a7ba7;
+            color: #6ba3ff;
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 1.1em;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #time-controls button:hover {
+            background: rgba(107, 163, 255, 0.4);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(107, 163, 255, 0.4);
+        }
+
+        #current-month {
+            font-size: 1.2em;
+            color: #e8e8e8;
+            min-width: 160px;
+            text-align: center;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        #current-month .month-subtitle {
+            display: block;
+            font-size: 0.70em;
+            color: #8899bb;
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        /* Unified ⓘ icon + hover tooltip */
+        .info-icon {
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            color: #6ba3ff;
+            font-size: 1.0em;
+            margin-left: 3px;
+            vertical-align: middle;
+        }
+
+        .info-tooltip {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 250px;
+            background: rgba(10, 10, 20, 0.92);
+            border: 1px solid #4a7ba7;
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-size: 0.8em;
+            color: #aac4ee;
+            line-height: 1.5;
+            pointer-events: none;
+            z-index: 200;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.7);
+            white-space: normal;
+            text-align: left;
+        }
+
+        .info-icon:hover .info-tooltip {
+            display: block;
+        }
+
+        /* Info panel - tabbed */
+        #culture-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(10, 10, 15, 0.95);
+            border: 1px solid #2a2a3e;
+            padding: 0;
+            width: 360px;
+            border-radius: 8px;
+            z-index: 50;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        #info-header {
+            padding: 15px 20px 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        #info-header-left {
+            flex: 1;
+            min-width: 0;
+        }
+
+        #info-title {
+            color: #6ba3ff;
+            margin: 0 0 14px;
+            font-size: 1.1em;
+            font-family: 'Cinzel', serif;
+        }
+
+        #toggle-info {
+            background: none;
+            border: none;
+            color: #6ba3ff;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: transform 0.3s;
+            padding: 0;
+            margin-left: 10px;
+            margin-top: 2px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .tab-bar {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid #2a2a3e;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #667799;
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 0.8em;
+            padding: 6px 14px 8px;
+            cursor: pointer;
+            transition: color 0.2s, border-color 0.2s;
+            margin-bottom: -1px;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: #aac4ee;
+        }
+
+        .tab-btn.active {
+            color: #6ba3ff;
+            border-bottom-color: #6ba3ff;
+        }
+
+        /* Info panel collapsed state */
+        #culture-info.collapsed .tab-bar,
+        #culture-info.collapsed .tab-panel {
+            display: none;
+        }
+
+        /* Toggle arrow rotates when panel is open (not collapsed) */
+        #culture-info:not(.collapsed) #toggle-info {
+            transform: rotate(180deg);
+        }
+
+        .tab-panel {
+            display: none;
+            padding: 20px;
+            max-height: 480px;
+            overflow-y: auto;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .tab-panel h2.month-heading {
+            color: #e8e8f8;
+            font-family: 'Cinzel', serif;
+            font-size: 1.3em;
+            margin: 0 0 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #2a2a3e;
+        }
+
+        .info-section {
+            margin-bottom: 18px;
+        }
+
+        .info-section-label {
+            color: #6ba3ff;
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .info-section-body {
+            color: #bbb;
+            font-size: 0.9em;
+            line-height: 1.65;
+        }
+
+        /* View toggles panel - bottom right - collapsible */
+        #view-toggles {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(10, 10, 15, 0.95);
+            border: 1px solid #2a2a3e;
+            padding: 0;
+            border-radius: 8px;
+            z-index: 50;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            min-width: 200px;
+            transition: all 0.3s;
+        }
+
+        #view-toggles-header {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+            border-bottom: 1px solid #2a2a3e;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+        }
+
+        #view-toggles-header:hover {
+            background: linear-gradient(135deg, #252540 0%, #1a1a2e 100%);
+        }
+
+        #view-toggles-header h4 {
+            color: #6ba3ff;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9em;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #toggle-view-options {
+            background: none;
+            border: none;
+            color: #6ba3ff;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: transform 0.3s;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* When open (not collapsed), rotate arrow to point down */
+        #view-toggles:not(.collapsed) #toggle-view-options {
+            transform: rotate(180deg);
+        }
+
+        #view-toggles-content {
+            padding: 15px 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            transition: max-height 0.3s, padding 0.3s;
+        }
+
+        #view-toggles.collapsed #view-toggles-content {
+            max-height: 0;
+            padding: 0 20px;
+            overflow: hidden;
+        }
+
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 0.85em;
+        }
+
+        .toggle-label {
+            color: #ccc;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* Custom toggle switch */
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background: rgba(74, 123, 167, 0.3);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+            border: 1px solid #4a7ba7;
+        }
+
+        .toggle-switch.active {
+            background: rgba(107, 163, 255, 0.6);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            background: #6ba3ff;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(20px);
+        }
+
+        /* Disabled dependent toggle */
+        div.toggle-switch.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* Scrollbar styling */
+        .tab-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .tab-panel::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-panel::-webkit-scrollbar-thumb {
+            background: rgba(107, 163, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .tab-panel::-webkit-scrollbar-thumb:hover {
+            background: rgba(107, 163, 255, 0.5);
+        }
+
+        /* You are here — bottom left of sky container */
+        #you-are-here {
+            position: absolute;
+            bottom: 100px;
+            left: 20px;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        #you-are-here-text {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 0.85em;
+            color: rgba(107, 163, 255, 0.7);
+            font-style: italic;
+            letter-spacing: 0.5px;
+            line-height: 1.6;
+        }
+
+        /* Override d3-celestial styles */
+        .celestial-background {
+            fill: #000 !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <!-- Main sky view - full width -->
+        <div id="sky-container">
+            <div id="celestial-map"></div>
+            <div class="cardinal-direction" id="cardinal-n">N</div>
+            <div class="cardinal-direction" id="cardinal-s">S</div>
+            <div class="cardinal-direction" id="cardinal-e">E</div>
+            <div class="cardinal-direction" id="cardinal-w">W</div>
+
+            <!-- Title overlay - top left -->
+            <div id="sky-title-overlay">
+                <div id="sky-title-text">Ancient Skies</div>
+                <div class="sky-tagline">Journey through time to see the stars as ancient cultures saw them</div>
+            </div>
+
+            <!-- You are here — bottom left -->
+            <div id="you-are-here">
+                <span id="you-are-here-text">lying in Babylon,<br>Mesopotamia,<br>gazing at the sky<br>above you in 500 BCE</span>
+            </div>
+
+            <!-- Culture info overlay - tabbed panel -->
+            <div id="culture-info" class="collapsed">
+                <div id="info-header">
+                    <div id="info-header-left">
+                        <h3 id="info-title">Learn More</h3>
+                        <div class="tab-bar">
+                            <button class="tab-btn active" data-tab="month">Month</button>
+                            <button class="tab-btn" data-tab="more-info">Constellations</button>
+                        </div>
+                    </div>
+                    <button id="toggle-info">▼</button>
+                </div>
+                <div id="tab-month" class="tab-panel active">
+                    <h2 class="month-heading" id="tab-month-heading">Nisanu</h2>
+                    <div class="info-section">
+                        <div class="info-section-label">Modern Equivalent</div>
+                        <div class="info-section-body" id="tab-month-modern">March / April</div>
+                    </div>
+                    <div class="info-section">
+                        <div class="info-section-label">Meaning</div>
+                        <div class="info-section-body" id="tab-month-meaning">—</div>
+                    </div>
+                    <div class="info-section">
+                        <div class="info-section-label">Season</div>
+                        <div class="info-section-body" id="tab-month-season">—</div>
+                    </div>
+                    <div class="info-section">
+                        <div class="info-section-label">Rituals &amp; Activities</div>
+                        <div class="info-section-body" id="tab-month-rituals">—</div>
+                    </div>
+                </div>
+<div id="tab-more-info" class="tab-panel">
+                    <div class="info-section">
+                        <div class="info-section-label">More Info</div>
+                        <div class="info-section-body" id="tab-more-info-body"><em style="color: #667799;">Click on a star or constellation name to learn more.</em></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Month progression controls -->
+            <div id="time-controls">
+                <button id="prev-month" title="Previous Month">◀</button>
+                <span id="current-month">
+                    <span id="month-name">Nisanu</span>
+                    <span class="month-subtitle">
+                        modern-day March/April
+                        <span class="info-icon">ⓘ<div class="info-tooltip">The Babylonian calendar had 12 lunar months, like ours — but each one began the moment astronomers first sighted the new crescent moon low on the western horizon at sunset. This means the precise start date shifts slightly from year to year.</div></span>
+                    </span>
+                </span>
+                <button id="next-month" title="Next Month">▶</button>
+            </div>
+
+            <!-- View toggles panel - collapsible -->
+            <div id="view-toggles" class="collapsed">
+                <div id="view-toggles-header">
+                    <h4>View Options</h4>
+                    <button id="toggle-view-options">▲</button>
+                </div>
+                <div id="view-toggles-content">
+                    <div class="toggle-item">
+                        <span class="toggle-label">Month Highlights <span class="info-icon">ⓘ<div class="info-tooltip">Highlights the stars associated with the current Babylonian month's mythology.</div></span></span>
+                        <div class="toggle-switch" data-toggle="monthly-stars">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                    <div class="toggle-item">
+                        <span class="toggle-label">Milky Way</span>
+                        <div class="toggle-switch" data-toggle="milky-way">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                    <div class="toggle-item">
+                        <span class="toggle-label">Way of Anu <span class="info-icon">ⓘ<div class="info-tooltip">The 12 zodiacal constellations of the Path of the Sun, associated with the sky-god Anu. These mark the ecliptic and formed the foundation of the Babylonian zodiac.</div></span></span>
+                        <div class="toggle-switch" data-toggle="way-anu">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                    <div class="toggle-item">
+                        <span class="toggle-label">Way of Enlil <span class="info-icon">ⓘ<div class="info-tooltip">The 33 northern constellations belonging to Enlil, god of wind and sky. These stars never set below the horizon as seen from Babylon.</div></span></span>
+                        <div class="toggle-switch" data-toggle="way-enlil">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                    <div class="toggle-item">
+                        <span class="toggle-label">Way of Ea <span class="info-icon">ⓘ<div class="info-tooltip">The 15 southern constellations belonging to Ea, god of wisdom and the deep waters. These stars rise and set near the southern horizon.</div></span></span>
+                        <div class="toggle-switch" data-toggle="way-ea">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                    <div class="toggle-item">
+                        <span class="toggle-label">Constellation Names <span class="info-icon">ⓘ<div class="info-tooltip">Shows the MUL.APIN name of each Babylonian constellation figure. Enable at least one Way to use this.</div></span></span>
+                        <div class="toggle-switch disabled" data-toggle="constellation-names">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Load mythology text data
+        let mythologyData = null;
+        
+        fetch('mythology-text.json')
+            .then(response => response.json())
+            .then(data => {
+                mythologyData = data;
+                console.log('Mythology text loaded successfully');
+            })
+            .catch(error => {
+                console.error('Error loading mythology text:', error);
+            });
+
+        // Culture configurations with historically accurate locations, dates, and mythology
+        const cultures = [
+            {
+                id: 'babylonian',
+                name: 'Babylonian',
+                location: 'Babylon, Mesopotamia',
+                era: '~1000 BCE',
+                description: 'The Babylonians created the zodiac and MUL.APIN star catalogs around 1000 BCE, systematically recording celestial omens and establishing the foundation for Western astrology and astronomy.',
+                latitude: 32.5434,
+                longitude: 44.4216,
+                dateString: '1000-03-15 22:00:00', // March - Akitu festival
+                startMonth: 3 // March
+            },
+            {
+                id: 'greek',
+                name: 'Greek',
+                location: 'Athens, Greece',
+                era: '~400 BCE',
+                description: 'Classical Greek astronomers catalogued the heavens and wove elaborate myths around the constellations. Their stories of heroes, gods, and monsters still define how we see the stars today.',
+                latitude: 37.9838,
+                longitude: 23.7275,
+                dateString: '400-04-01 23:00:00', // April - Perseus cycle begins
+                startMonth: 4 // April
+            },
+            {
+                id: 'egyptian',
+                name: 'Egyptian',
+                location: 'Thebes (Luxor), Egypt',
+                era: '~1500 BCE',
+                description: 'Ancient Egyptians used the stars to track agricultural seasons and guide their sacred architecture. The heliacal rising of Sirius marked the annual flooding of the Nile.',
+                latitude: 25.6872,
+                longitude: 32.6396,
+                dateString: '1500-07-19 04:00:00', // July - Sirius rising (New Year)
+                startMonth: 7 // July
+            },
+            {
+                id: 'chinese',
+                name: 'Chinese',
+                location: 'Central China',
+                era: '~100 BCE',
+                description: 'Chinese astronomers organized the heavens into intricate systems of asterisms and palaces, tracking celestial events with precision for millennia. The Three Enclosures and Twenty-Eight Mansions structured their cosmic view.',
+                latitude: 34.3416,
+                longitude: 108.9398,
+                dateString: '100-02-01 20:00:00', // February - Lunar New Year
+                startMonth: 2 // February
+            },
+            {
+                id: 'siberian',
+                name: 'Siberian Great Hunt',
+                location: 'Central Siberia',
+                era: '~500 CE',
+                description: 'The Great Hunt is a cosmic narrative found across northern cultures, where constellations tell the story of an eternal hunt across the heavens. The Big Dipper transforms from hunters to elk across the seasons.',
+                latitude: 60.0,
+                longitude: 100.0,
+                dateString: '500-09-01 22:00:00', // September - Hunt begins
+                startMonth: 9 // September
+            }
+        ];
+
+        let currentCulture = null;
+        let currentDate = null;
+        let currentMonth = 0; // 0-11 for Jan-Dec
+        let currentMonthInCycle = 0; // 0-11 for position in culture's 12-month cycle
+        let config = null;
+        let celestialInitialized = false; // Track if Celestial has been initialized
+
+        // View toggle states - default all OFF for baseline view
+        let viewToggles = {
+            monthlyStars: false,
+            milkyWay: false,
+            wayAnu: false,
+            wayEnlil: false,
+            wayEa: false,
+            constellationNames: false
+        };
+
+        let drawnLabels = [];
+        let selectedConstellation = null;
+
+        const monthNames = ['Nisanu', 'Ayaru', 'Simanu', "Du'uzu", 'Abu', 'Ululu',
+                           'Tashritu', 'Arakhsamna', 'Kislimu', 'Tebetu', 'Shabatu', 'Adaru'];
+
+        const monthModern = ['March/April', 'April/May', 'May/June', 'June/July', 'July/August',
+                             'August/September', 'September/October', 'October/November',
+                             'November/December', 'December/January', 'January/February', 'February/March'];
+
+        // Per-month content, keyed by month index (0 = Nisanu)
+        const monthData = [
+            { meaning: `[The month of rebirth and the "Beginning." Dedicated to Anu and Enlil]`, season: `[The start of the main barley harvest. It was a period of high intensity and preparation for the coming heat.]`, rituals: `[Hosted the Akitu Festival, a 12-day New Year celebration where the king’s mandate was renewed, and the Enuma Elish (Creation Epic) was recited to honor Marduk’s victory over chaos.]` },
+            { meaning: '[The "Month of Flowers" or "Blossoming." Dedicated to Ea, god of wisdom and fresh waters.]', season: '[Completion of the cereal harvest and the beginning of threshing and winnowing.]', rituals: '[A time for processions and the "Entry of the Gods" into their temples. It was considered a favorable time for laying the foundations of new buildings.]' },
+            { meaning: '[Dedicated to the moon god Sin.]', season: '[End of the harvest cycle. Farmers turned their attention to the maintenance of irrigation canals before the rivers dropped too low.]', rituals: '[Rituals often focused on the construction of bricks (the "Month of the Brick-Mold"). It was the ideal time for brick-making as the sun was hot enough to bake them quickly.]' },
+            { meaning: "[Named after Dumuzi (Tammuz), the god of fertility and the consort of Ishtar.]", season: "[The peak of the dry season. Field work slowed down significantly due to the oppressive heat; focus shifted to tending orchards and date palms.]", rituals: "[A period of mourning. Rituals lamented the death of Dumuzi (symbolizing the death of vegetation in the summer heat) as he descended into the underworld.]" },
+            { meaning: '[The "Month of Fire." Dedicated to the sun god Shamash and Gibil (god of fire).]', season: '[Harvest of the first dates.]', rituals: '[Characterized by "festivals of torches" and rituals to appease the spirits of the ancestors (Gidim), who were thought to be closer to the world of the living during the midsummer heat.]' },
+            { meaning: `[Dedicated to Ishtar. It was a month of purification and preparation for the secondary equinox.]`, season: `[General maintenance and the cleaning of silos. Farmers prepared the ground for the upcoming winter crops.]`, rituals: `[Extensive rituals involving the cleaning of temples and the king’s performance of various atonement rites to ensure the favor of the gods for the coming half-year.]` },
+            { meaning: '[the seventh month was a mirror to the first month (Nisannu). While Nisannu was the New Year of the Earth (renewal of life), Tashritu was the New Year of the Heavens and Fate. It was believed that the gods met during this month to "fix the destinies" for the coming half-year.]', season: '[The start of the plowing and sowing season for the winter barley and wheat crops.]', rituals: '[A "second New Year." Rituals focused on judgment and the weighing of souls, as Shamash was the god of justice.]' },
+            { meaning: `[Arahsamnu is dedicated to Marduk, the patron deity of Babylon and the head of the pantheon. While Marduk is celebrated in the spring (Nisannu) for creating the world, his role in the eighth month is more somber and authoritative. If the fates were "weighed" in Tashritu, they are "locked in" during Arahsamnu. It symbolizes the absolute sovereignty of Marduk. Symbolically, the life of the kingdom moved from the surface (the harvest of the previous months) to the subsurface. The energy of the world was now concentrated underground, mirroring the descent of the sun and the cooling of the earth.]`, season: `[This is the peak of the plowing and sowing season. To the Babylonians, putting seeds into the ground was a ritual act of "burying" life so it could be transformed. This month was associated with the return of the heavy rains. The "heavy rains" didn't usually mean constant monsoons; rather, they were the first significant rains of the season that broke the baked, brick-hard crust of the earth after a scorching summer. Marduk was not only a creator but also a master of the storm and the flood. Arahsamnu represents the moment when the celestial waters begin to pour back onto the earth, signaling a shift from the dusty dry season to a world defined by water and mud.]`, rituals: `[Unlike almost every other month, Arahsamnu had very few public, joyous festivals. This "silence" from the gods was often interpreted as a period of divine distance or sternness. Because there were no major celebrations to "distract" the gods, people felt more vulnerable to the whims of fate. It was a month for personal piety and quiet ritual rather than grand city-wide parades.]` },
+            { meaning: '[Dedicated to Nergal, the god of the Underworld, war, and pestilence.]', season: '[The grain begins to "sleep." Farmers shifted from the fields to the Canals, dredging out the silt that the early rains had washed in to prevent winter flooding.]', rituals: '[The Festival of the Brazier. Huge fires were lit in temples to "keep the sun alive." It was a time of military mobilization; the mud was not yet too deep for chariots, so this was often the time for the King to march to war.]' },
+            { meaning: '[The month of the "Messenger." Because the Great Gods were thought to be "asleep" or in the underworld during the winter solstice, Papsukkal (the messenger) was the only way to reach them.]', season: '[The "Mud Lock." The rivers rose and the rains were cold. Cattle were moved into pens. This was the time for leatherworking and weaving within the safety of the home]', rituals: '[The king would often dress in mourning clothes. People prayed for the "Return of the Sun" (Shamash).]' },
+            { meaning: `[Dedicated to Adad, the Storm God. This is the month of the most violent weather.]`, season: `[The "Green Spike." The barley begins to show its first green shoots. This was the period of "Hope and Fear"—if a freeze came now, the city would starve in the summer.]`, rituals: `[The Festival of the Waters. People poured libations of beer and wine into the river to appease the "Roaring One" (the river gods), hoping the spring floods wouldn't destroy their towns.]` },
+            { meaning: `[The Mask of Mayhem. Dedicated to Erra, the god of chaos. It is a "garbage" month where the leftovers bad luck are concentrated from the year.]`, season: `[The "Swelling of the Grain." The crops are almost ready. If the lunar cycle was too far off from the solar cycle, the king would announce an Addaru II (an extra month), forcing everyone to wait another 30 days for the New Year.]`, rituals: `[The Month of Masks. To hide from the "Plague God" Erra, people wore masks and performed role-reversal plays. It was a chaotic, carnival-like atmosphere designed to confuse evil spirits so they wouldn't follow the city into the New Year.]` },
+        ];
+
+        const starsOmensData = [
+            { constellations: '[Nisanu key stars & constellations placeholder]', omens: '[Nisanu celestial omens placeholder]' },
+            { constellations: '[Ayaru key stars & constellations placeholder]', omens: '[Ayaru celestial omens placeholder]' },
+            { constellations: '[Simanu key stars & constellations placeholder]', omens: '[Simanu celestial omens placeholder]' },
+            { constellations: "[Du'uzu key stars & constellations placeholder]", omens: "[Du'uzu celestial omens placeholder]" },
+            { constellations: '[Abu key stars & constellations placeholder]', omens: '[Abu celestial omens placeholder]' },
+            { constellations: '[Ululu key stars & constellations placeholder]', omens: '[Ululu celestial omens placeholder]' },
+            { constellations: '[Tashritu key stars & constellations placeholder]', omens: '[Tashritu celestial omens placeholder]' },
+            { constellations: '[Arakhsamna key stars & constellations placeholder]', omens: '[Arakhsamna celestial omens placeholder]' },
+            { constellations: '[Kislimu key stars & constellations placeholder]', omens: '[Kislimu celestial omens placeholder]' },
+            { constellations: '[Tebetu key stars & constellations placeholder]', omens: '[Tebetu celestial omens placeholder]' },
+            { constellations: '[Shabatu key stars & constellations placeholder]', omens: '[Shabatu celestial omens placeholder]' },
+            { constellations: '[Adaru key stars & constellations placeholder]', omens: '[Adaru celestial omens placeholder]' },
+        ];
+
+        const funFactsData = [
+            { fact: '[Nisanu fun fact placeholder]' },
+            { fact: '[Ayaru fun fact placeholder]' },
+            { fact: '[Simanu fun fact placeholder]' },
+            { fact: "[Du'uzu fun fact placeholder]" },
+            { fact: '[Abu fun fact placeholder]' },
+            { fact: '[Ululu fun fact placeholder]' },
+            { fact: '[Tashritu fun fact placeholder]' },
+            { fact: '[Arakhsamna fun fact placeholder]' },
+            { fact: '[Kislimu fun fact placeholder]' },
+            { fact: '[Tebetu fun fact placeholder]' },
+            { fact: '[Shabatu fun fact placeholder]' },
+            { fact: '[Adaru fun fact placeholder]' },
+        ];
+
+        const constellationInfo = {
+            "LU.HUN.GA (Hired Man)": "As the first sign of the Babylonian zodiac, the \"Hired Man\" represented the seasonal laborer ready to begin the agricultural year. It was associated with the god Dumuzi (the lover of Ishtar), a shepherd-god who spent half the year in the underworld, symbolizing the death and rebirth of vegetation. Because it marked the Spring Equinox, its appearance was the signal for the New Year festival (Akitu), where the king's mandate was renewed. If a planet appeared bright in this constellation, it was seen as a blessing on the year's upcoming labor and a sign that the \"hired hands\" of the empire would be productive.",
+            "GU4.AN.NA (Bull of Heaven)": "This constellation was a terrifying celestial force, famously sent by the sky-god Anu at the request of Ishtar to punish the hero Gilgamesh. In the Epic of Gilgamesh, the Bull's breath opens cracks in the earth that swallow hundreds of men, making it a symbol of drought and seismic destruction. Astronomically, it sits near the \"Cloud of Stars\" (Pleiades), and its \"horns\" were seen as pointing toward the gateway of the summer heat. An omen involving the Bull often warned of a \"scorched land\" or a lack of rain that would threaten the survival of the city's livestock.",
+            "MAS.TAB.BA GAL.GAL (Great Twins)": "These twins were not mortal brothers like the Greek Castor and Pollux, but rather the fierce underworld guardian deities Lugal-irra and Meslamta-ea. They were often depicted as \"The Staring Gods\" who stood at the entrance of a temple or the gates of the Netherworld to hack down enemies of the state. Because they represented the \"Total Power\" of the gods, their appearance in the sky was a protective omen. If a planet entered their domain, it was interpreted as a sign of military strength and the secure fortification of the king's borders against invaders.",
+            "MUL.MUL (The Star Cluster)": "Known simply as \"The Stars,\" this cluster was considered a single, multi-headed deity representing the Sebitti—the Seven Warrior Gods. These were destructive, martial spirits who followed the plague-god Nergal into battle. They were neither \"good\" nor \"evil,\" but a chaotic force of nature. Because they appear near the \"Hired Man\" and the \"Bull,\" they were used to calibrate the lunar calendar; if the Moon was near the Pleiades on a specific night, the priests knew whether to add an extra month to the year to keep the seasons aligned.",
+            "SIPA.ZI.AN.NA (True Shepherd of Anu)": "The \"True Shepherd\" was the celestial counterpart to the Babylonian King. He was seen as the loyal servant of Anu, tasked with keeping the \"flock\" of stars in their proper paths so the universe wouldn't fall into chaos. He was also linked to Papsukkal, the messenger god who carried reports from Earth to the high heavens. When a planet passed through the Shepherd, the omen almost always concerned the King's personal health or his ability to lead. A bright planet here meant the King was successfully fulfilling his divine duty as a shepherd to his people.",
+            "UR.GU.LA (Urgulu-demon)": "The Lion was the supreme symbol of royalty and the ferocity of the sun at its summer zenith. It was the \"Beast of Ishtar,\" representing her power to destroy enemies and uphold the throne. In the Babylonian sky, the Lion's \"heart\" was the star we call Regulus (meaning \"King\"), and its position was used to predict the fate of the monarchy. If a planet—especially the \"King Planet\" Jupiter—entered the Lion, it was a guarantee of the king's supremacy. Conversely, an eclipse in the Lion was one of the most feared omens, suggesting the death of a great ruler.",
+            "AB.SIN (Furrow)": "While later cultures saw a winged woman, the Babylonians saw a literal \"Furrow\" in the earth, the trench made by a plow. The brightest star, Spica, was seen as an ear of corn or a stalk of barley held by the goddess Shala. This constellation was the celestial anchor for the harvest season. Its significance was entirely tied to the \"Great Green\" (the abundance of crops). If the Moon or a planet moved through the Furrow with a \"shining face,\" the priests predicted a surplus of grain and low prices in the markets, ensuring the stability of the empire.",
+            "ZI.BA.AN.NA (Scales)": "The Scales were the only inanimate object in the early zodiac, representing the balance of the Autumn Equinox where day and night are equal. They were the \"Scales of Shamash,\" the Sun God who saw all crimes and acted as the ultimate judge. This constellation was the divine courthouse of the sky. Omens occurring here usually dealt with legal matters, trade, and the \"just price\" of goods. If a planet flickered while in the Scales, it was a warning that merchants were being dishonest or that the King needed to re-establish justice in the courts.",
+            "GIR.TAB (Scorpion)": "The Scorpion was a creature of the \"Dark Earth\" and was associated with the god Ishhara, a goddess of oaths and marriage who could also be a deadly punisher. Scorpion-men are famously described in the Epic of Gilgamesh as guards at the gate of the Twin Peaks, where the sun rises and sets. Because the Scorpion is \"stinging\" the path of the sun, its appearance was often linked to betrayal, hidden enemies, or \"stinging\" illnesses. An omen in the Scorpion often prompted the King to be wary of conspirators within his own palace.",
+            "PA.BIL.SAG (God Pabilsang)": "Pabilsag was a strange, multifaceted god often shown as a centaur with a scorpion's tail, wings, and two heads (one human, one dog). He was a hunter-god associated with the city of Larrak and was believed to be the son of Enlil. He represented a bridge between the wild, chaotic world of the steppe and the organized world of the city. In the stars, he was seen as a protector who fired arrows at the \"Scorpion\" to keep it from encroaching on the path of the sun. His omens often involved the success of hunting expeditions or the suppression of nomadic rebels.",
+            "SUHUR.MAS (Goat-Fish)": "This was the most iconic \"composite\" beast, featuring the front of a goat and the tail of a fish. It was the personal symbol of Ea, the God of Wisdom, fresh waters, and the deep abyss (Abzu). The Goat-Fish represented the fertile silt and life-giving water that allowed the Mesopotamian civilization to exist. When the sun entered this sign, it marked the \"Deep of Winter,\" a time of purification and rituals to the water gods. Omens here were usually positive, signaling that the deep springs would remain full and that wisdom would prevail in the King's council.",
+            "GU.LA (The Great One)": "\"The Great One\" was a giant figure, often identified as Ea himself or one of his attendants, pouring water from a massive jar. This wasn't just rain; it represented the flooding of the Tigris and Euphrates, which was the lifeblood of the region. The constellation symbolized the abundance of the \"Great Waters\" and the washing away of the old year's sins. If a planet appeared brightly in the \"Great One,\" it was an omen that the canals would flow freely and the land would be cleansed of disease and impurity."
+        };
+
+        let activeTab = 'month';
+
+        // Switch active tab
+        function switchTab(tabName) {
+            activeTab = tabName;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tabName);
+            });
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.toggle('active', panel.id === 'tab-' + tabName);
+            });
+        }
+
+        // Populate tab panel content for the current month in cycle
+        function updateTabContent() {
+            const i = currentMonthInCycle;
+            const md = monthData[i];
+            const so = starsOmensData[i];
+
+            document.getElementById('tab-month-heading').textContent = monthNames[i];
+            document.getElementById('tab-month-modern').textContent = monthModern[i];
+            document.getElementById('tab-month-meaning').textContent = md ? md.meaning : '—';
+            document.getElementById('tab-month-season').textContent = md ? md.season : '—';
+            document.getElementById('tab-month-rituals').textContent = md ? md.rituals : '—';
+            if (selectedConstellation === null) {
+                document.getElementById('tab-more-info-body').innerHTML = '<em style="color: #667799;">Click on a constellation name to learn more.</em>';
+            }
+        }
+
+        // Get mythology text for current culture and month
+        function getMythologyText() {
+            if (!mythologyData || !currentCulture) {
+                return "Loading mythology...";
+            }
+            
+            const cultureData = mythologyData[currentCulture.id];
+            if (!cultureData || !cultureData.months) {
+                return currentCulture.description; // Fallback to description
+            }
+            
+            // Get the text for the current month in the cycle
+            const monthData = cultureData.months[currentMonthInCycle];
+            if (!monthData) {
+                return currentCulture.description;
+            }
+            
+            // Return text with optional title
+            if (monthData.title) {
+                return `<strong>${monthData.title}</strong><br><br>${monthData.text}`;
+            }
+            return monthData.text;
+        }
+
+        // Base configuration for d3-celestial with HORIZON VIEW
+        function getBaseConfig(culture, date) {
+            return {
+                width: 0,
+                projection: "stereographic",
+                transform: "horizontal",
+                center: null,
+                orientationfixed: false,
+                geopos: [culture.longitude, culture.latitude],
+                follow: "zenith",
+                zoomlevel: null,
+                zoomextend: 10,
+                adaptable: true,
+                interactive: true,
+                form: false,
+                location: false,
+                formFields: {
+                    date: date // Pass the date here in the config
+                },
+                advanced: false,
+                daterange: [],
+                controls: false,
+                lang: "",
+                culture: "",
+                container: "celestial-map",
+                datapath: "data/",
+                // Disable automatic data loading to prevent 404s
+                stars: {
+                    show: true,
+                    limit: 6,
+                    colors: true,
+                    style: { fill: "#ffffff", opacity: 1 },
+                    designation: false,
+                    designationLimit: 2.5,
+                    propername: false,
+                    propernameLimit: 2.5,
+                    size: 7,
+                    exponent: -0.28,
+                    data: 'stars.6.json',
+                    namelimit: 999 // Only load names from our data, not external
+                },
+                dsos: {
+                    show: false,
+                    limit: 6,
+                    colors: true,
+                    style: { fill: "#cccccc", stroke: "#cccccc", width: 2, opacity: 1 },
+                    names: true,
+                    namesLimit: 6,
+                    size: null,
+                    exponent: 1.4,
+                    data: 'dsos.bright.json',
+                    symbols: {
+                        gg: {shape: "circle", fill: "#ff0000"},
+                        g: {shape: "circle", fill: "#ff0000"},
+                        s: {shape: "square", fill: "#ff0000"},
+                        e: {shape: "ellipse", fill: "#ff0000"},
+                        oc: {shape: "circle", fill: "#ffcc00", stroke: "#ffcc00", width: 1.5},
+                        gc: {shape: "circle", fill: "#ff9900"},
+                        en: {shape: "square", fill: "#ff00cc"},
+                        bn: {shape: "square", fill: "#ff00cc", stroke: "#ff00cc", width: 2},
+                        sfr: {shape: "square", fill: "#cc00ff", stroke: "#cc00ff", width: 2},
+                        rn: {shape: "square", fill: "#00ooff"},
+                        pn: {shape: "diamond", fill: "#00cccc"},
+                        snr: {shape: "diamond", fill: "#ff00cc"},
+                        dn: {shape: "square", fill: "#999999", stroke: "#999999", width: 2},
+                        pos: {shape: "marker", fill: "#cccccc", stroke: "#cccccc", width: 1.5}
+                    }
+                },
+                constellations: {
+                    show: true,
+                    names: false,
+                    namesType: "name",
+                    nameStyle: { fill: "#cccc99", align: "center", baseline: "middle", opacity: 0.8,
+                               font: ["14px Courier Prime", "bold 13px Courier Prime", "bold 12px Courier Prime"] },
+                    lines: false,
+                    lineStyle: { stroke: "#cccccc", width: 1, opacity: 0.6 },
+                    bounds: false,
+                    boundStyle: { stroke: "#cccc00", width: 0.5, opacity: 0.8, dash: [2, 4] }
+                },
+                mw: {
+                    show: false,
+                    style: { fill: "#ffffff", opacity: 0.15 }
+                },
+                lines: {
+                    graticule: { show: true, stroke: "#444444", width: 0.6, opacity: 0.4, 
+                                lon: {pos: [""], fill: "#eee", font: "10px Helvetica, Arial, sans-serif"}, 
+                                lat: {pos: [""], fill: "#eee", font: "10px Helvetica, Arial, sans-serif"}},
+                    equatorial: { show: false, stroke: "#aaaaaa", width: 1.3, opacity: 0.7 },
+                    ecliptic: { show: false, stroke: "#66cc66", width: 1.3, opacity: 0.7 },
+                    galactic: { show: false, stroke: "#cc6666", width: 1.3, opacity: 0.7 },
+                    supergalactic: { show: false, stroke: "#cc66cc", width: 1.3, opacity: 0.7 }
+                },
+                background: { fill: "#000000", opacity: 1, stroke: "#1a1a3e", width: 2 },
+                horizon: { show: false },
+                daylight: { show: false },
+                planets: { show: false }
+            };
+        }
+
+        // Parse date string and create Date object
+        function parseCustomDate(dateString) {
+            // Format: "1000-01-01 00:00:00"
+            const parts = dateString.split(' ');
+            const dateParts = parts[0].split('-');
+            const timeParts = parts[1].split(':');
+            
+            // Note: Negative years (BCE) need special handling
+            const year = parseInt(dateParts[0]);
+            const month = parseInt(dateParts[1]) - 1; // JS months are 0-indexed
+            const day = parseInt(dateParts[2]);
+            const hour = parseInt(timeParts[0]);
+            const minute = parseInt(timeParts[1]);
+            const second = parseInt(timeParts[2]);
+            
+            return new Date(year, month, day, hour, minute, second);
+        }
+
+        // Update date by adding months
+        function adjustDate(date, monthsToAdd) {
+            const newDate = new Date(date);
+            newDate.setMonth(newDate.getMonth() + monthsToAdd);
+            return newDate;
+        }
+
+        // Generate culture buttons
+        function generateCultureButtons() {
+            const container = document.getElementById('culture-buttons');
+            cultures.forEach(culture => {
+                const btn = document.createElement('button');
+                btn.className = 'culture-btn';
+                btn.dataset.cultureId = culture.id;
+                btn.innerHTML = `
+                    <span class="culture-name">${culture.name}</span>
+                    <span class="culture-meta">${culture.location}, ${culture.era}</span>
+                `;
+                btn.addEventListener('click', () => switchCulture(culture));
+                container.appendChild(btn);
+            });
+        }
+
+        // Switch to a different culture
+        function switchCulture(culture) {
+            currentCulture = culture;
+            currentDate = parseCustomDate(culture.dateString);
+            currentMonth = currentDate.getMonth();
+            currentMonthInCycle = 0; // Always start at month 1 of their cycle
+
+            console.log(`=== Switching to ${culture.name} ===`);
+            console.log('Date:', currentDate);
+            console.log('Location:', culture.latitude, culture.longitude);
+            console.log('Starting month:', monthNames[currentMonth]);
+
+            // Update active button
+            document.querySelectorAll('.culture-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.cultureId === culture.id);
+            });
+
+            // Update "you are here" text
+            const eraText = culture.era.replace('~', '');
+            document.getElementById('you-are-here-text').textContent =
+                `you are lying in ${culture.location}, gazing at the sky above you in ${eraText}`;
+
+            // Display the sky
+            updateSkyView();
+
+            // Update info panel tab content for new culture
+            updateTabContent();
+        }
+
+        // Update the sky view with current culture/date
+        // Uses Celestial.apply() + Celestial.date() — display() is one-shot only
+        function updateSkyView() {
+            if (!currentCulture || !currentDate) return;
+
+            // Update location and display settings via apply()
+            Celestial.apply({
+                geopos: [currentCulture.longitude, currentCulture.latitude],
+                follow: "zenith",
+                transform: "horizontal",
+                constellations: {
+                    show: false,
+                    names: false,
+                    lines: false,
+                    bounds: false
+                },
+                stars: {
+                    show: true,
+                    limit: 6,
+                    propername: false
+                },
+                mw: { show: viewToggles.milkyWay },
+                dsos: { show: false }
+            });
+
+            // Shift the star map to the current date; monkey-patched Celestial.date
+            // will fire Celestial.redraw() 50ms later to trigger addCallback layers
+            Celestial.date(currentDate);
+
+            // Update month display
+            const monthNameEl = document.getElementById('month-name');
+            if (monthNameEl) monthNameEl.textContent = monthNames[currentMonthInCycle];
+            const subtitleEl = document.querySelector('.month-subtitle');
+            if (subtitleEl) {
+                const firstChild = subtitleEl.firstChild;
+                if (firstChild && firstChild.nodeType === Node.TEXT_NODE) {
+                    firstChild.textContent = 'modern-day ' + monthModern[currentMonthInCycle] + ' ';
+                }
+            }
+
+            // Update tab panel content for this month
+            updateTabContent();
+
+            console.log(`Updated sky: ${monthNames[currentMonthInCycle]} (cycle pos ${currentMonthInCycle}), Location: ${currentCulture.latitude}°N ${currentCulture.longitude}°E`);
+        }
+
+        // Month navigation
+        document.getElementById('prev-month').addEventListener('click', function() {
+            if (!currentCulture) return;
+            currentDate = adjustDate(currentDate, -1);
+            currentMonth = currentDate.getMonth();
+            
+            // Update position in cycle (wrap around)
+            currentMonthInCycle = (currentMonthInCycle - 1 + 12) % 12;
+            
+            updateSkyView();
+        });
+
+        document.getElementById('next-month').addEventListener('click', function() {
+            if (!currentCulture) return;
+            currentDate = adjustDate(currentDate, 1);
+            currentMonth = currentDate.getMonth();
+            
+            // Update position in cycle (wrap around)
+            currentMonthInCycle = (currentMonthInCycle + 1) % 12;
+            
+            updateSkyView();
+        });
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+        });
+
+        // Collapsible info panel
+        document.getElementById('toggle-info').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('culture-info').classList.toggle('collapsed');
+        });
+
+        // Collapsible view toggles panel
+        document.getElementById('toggle-view-options').addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent event bubbling
+            document.getElementById('view-toggles').classList.toggle('collapsed');
+        });
+
+        function updateConstellationNamesToggle() {
+            const anyWayActive = viewToggles.wayAnu || viewToggles.wayEnlil || viewToggles.wayEa;
+            document.querySelector('.toggle-switch[data-toggle="constellation-names"]')
+                .classList.toggle('disabled', !anyWayActive);
+            if (!anyWayActive && viewToggles.constellationNames) {
+                viewToggles.constellationNames = false;
+                document.querySelector('.toggle-switch[data-toggle="constellation-names"]').classList.remove('active');
+            }
+        }
+
+        // View toggle switches
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const toggleType = this.dataset.toggle;
+                this.classList.toggle('active');
+                
+                // Update toggle state
+                switch(toggleType) {
+                    case 'monthly-stars':
+                        viewToggles.monthlyStars = !viewToggles.monthlyStars;
+                        break;
+                    case 'milky-way':
+                        viewToggles.milkyWay = !viewToggles.milkyWay;
+                        break;
+                    case 'way-anu':
+                        viewToggles.wayAnu = !viewToggles.wayAnu;
+                        updateConstellationNamesToggle();
+                        break;
+                    case 'way-enlil':
+                        viewToggles.wayEnlil = !viewToggles.wayEnlil;
+                        updateConstellationNamesToggle();
+                        break;
+                    case 'way-ea':
+                        viewToggles.wayEa = !viewToggles.wayEa;
+                        updateConstellationNamesToggle();
+                        break;
+                    case 'constellation-names':
+                        if (!viewToggles.wayAnu && !viewToggles.wayEnlil && !viewToggles.wayEa) return;
+                        viewToggles.constellationNames = !viewToggles.constellationNames;
+                        break;
+                }
+
+                // Refresh the sky view with new settings
+                updateSkyView();
+            });
+        });
+
+        // Initialize everything when page loads — auto-load Babylonian sky
+        window.addEventListener('DOMContentLoaded', function() {
+            // 1. Set state
+            currentCulture = cultures.find(c => c.id === 'babylonian');
+            currentDate = parseCustomDate('500-03-20 22:00:00');
+            currentMonth = currentDate.getMonth(); // 2 = March
+            currentMonthInCycle = 0; // Start at Nisanu (month 1 of the Babylonian year)
+
+            // 2. Display Babylon's sky
+            Celestial.display(getBaseConfig(currentCulture, currentDate));
+
+            // 3. Mark initialized
+            celestialInitialized = true;
+
+            // 4. Monkey-patch Celestial.date so every call triggers a redraw 50ms later,
+            // giving d3-celestial time to finish its internal render before addCallback fires
+            const _originalDate = Celestial.date.bind(Celestial);
+            Celestial.date = function(date) {
+                _originalDate(date);
+                setTimeout(function() {
+                    if (Celestial.context) {
+                        Celestial.redraw();
+                    }
+                }, 300);
+            };
+
+            // 5. Register custom drawing callbacks AFTER display() and monkey-patch
+            // Month Highlights — blue rings, updates with month
+            Celestial.addCallback(function() {
+                drawnLabels = [];
+                if (!viewToggles.monthlyStars) return;
+                if (!currentCulture) return;
+                const hipIds = getHighlightedStars(currentCulture.id, currentMonthInCycle + 1);
+                if (!hipIds || !hipIds.length) return;
+                const ctx = Celestial.context;
+                hipIds.forEach(function(hip) {
+                    if (!STAR_COORDS[hip]) return;
+                    const coords = STAR_COORDS[hip].coords;
+                    if (!Celestial.clip(coords)) return;
+                    const pt = Celestial.mapProjection(coords);
+                    ctx.beginPath();
+                    ctx.arc(pt[0], pt[1], 12, 0, 2 * Math.PI);
+                    ctx.strokeStyle = "rgba(100, 180, 255, 0.4)";
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(pt[0], pt[1], 7, 0, 2 * Math.PI);
+                    ctx.strokeStyle = "rgba(150, 210, 255, 1.0)";
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                });
+            });
+
+            // Babylonian constellation lines — three-way color by path (purple/pink/cyan)
+            Celestial.addCallback(function() {
+                if (!viewToggles.wayAnu && !viewToggles.wayEnlil && !viewToggles.wayEa) return;
+
+                const ctx = Celestial.context;
+                const wayColors = {
+                    anu:   { line: "rgba(180, 140, 255, 0.6)", label: "rgba(180, 140, 255, 0.9)" },
+                    enlil: { line: "rgba(255, 100, 180, 0.7)", label: "rgba(255, 100, 180, 0.9)" },
+                    ea:    { line: "rgba(100, 220, 230, 0.7)", label: "rgba(100, 220, 230, 0.9)" }
+                };
+                const wayActive = { anu: viewToggles.wayAnu, enlil: viewToggles.wayEnlil, ea: viewToggles.wayEa };
+
+                BABYLON_CONSTELLATIONS.forEach(function(constellation) {
+                    const way = constellation.way;
+                    if (!wayActive[way]) return;
+
+                    const color = wayColors[way];
+                    ctx.strokeStyle = color.line;
+                    ctx.lineWidth = 1.2;
+
+                    const visiblePts = [];
+
+                    constellation.lines.forEach(function(line) {
+                        // Single-anchor: label-only entry with no line
+                        if (line.length === 1) {
+                            const hip = line[0];
+                            if (!STAR_COORDS[hip]) return;
+                            const coords = STAR_COORDS[hip].coords;
+                            if (!Celestial.clip(coords)) return;
+                            visiblePts.push(Celestial.mapProjection(coords));
+                            return;
+                        }
+                        for (let i = 0; i < line.length - 1; i++) {
+                            const hipA = line[i];
+                            const hipB = line[i + 1];
+                            if (!STAR_COORDS[hipA] || !STAR_COORDS[hipB]) continue;
+
+                            const coordsA = STAR_COORDS[hipA].coords;
+                            const coordsB = STAR_COORDS[hipB].coords;
+                            if (!Celestial.clip(coordsA) || !Celestial.clip(coordsB)) continue;
+
+                            const ptA = Celestial.mapProjection(coordsA);
+                            const ptB = Celestial.mapProjection(coordsB);
+                            if (Math.abs(ptA[0] - ptB[0]) > 300) continue;
+                            ctx.beginPath();
+                            ctx.moveTo(ptA[0], ptA[1]);
+                            ctx.lineTo(ptB[0], ptB[1]);
+                            ctx.stroke();
+
+                            visiblePts.push(ptA, ptB);
+                        }
+                    });
+
+                    // Draw constellation name at centroid of visible points
+                    if (viewToggles.constellationNames && visiblePts.length > 0) {
+                        const centroidX = visiblePts.reduce((s, p) => s + p[0], 0) / visiblePts.length;
+                        const centroidY = visiblePts.reduce((s, p) => s + p[1], 0) / visiblePts.length;
+                        ctx.font = "11px 'Courier Prime', monospace";
+                        ctx.fillStyle = color.label;
+                        ctx.fillText(constellation.name, centroidX + 5, centroidY);
+                        drawnLabels.push({ text: constellation.name, x: centroidX + 5, y: centroidY, type: 'constellation', id: constellation.name });
+                    }
+                });
+            });
+
+            // 6. Click detection on canvas labels (constellation names drawn by callbacks)
+            document.getElementById('sky-container').addEventListener('click', function(e) {
+                if (!drawnLabels.length) return;
+                const canvas = document.getElementById('celestial-map').querySelector('canvas');
+                if (!canvas) return;
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                let hit = null;
+                drawnLabels.forEach(function(label) {
+                    const dx = x - label.x;
+                    const dy = y - label.y;
+                    if (Math.abs(dx) < 80 && Math.abs(dy) < 12) hit = label;
+                });
+                if (!hit) return;
+                if (hit.type === 'constellation') {
+                    selectedConstellation = hit.id;
+                    switchTab('more-info');
+                    const info = constellationInfo[hit.id] || 'Information coming soon.';
+                    document.getElementById('tab-more-info-body').innerHTML =
+                        '<strong style="color:#b48cff;">' + hit.text + '</strong><br><br>' + info;
+                    document.getElementById('culture-info').classList.remove('collapsed');
+                }
+            });
+
+            // 7. Sync month display and tab content with Babylon month 1 (Nisanu)
+            updateSkyView();
+            updateTabContent();
+
+            console.log('Ancient Skies initialized — Babylon, 500 BCE, Nisanu (month 1)');
+        });
+    </script>
+</body>
+</html>
