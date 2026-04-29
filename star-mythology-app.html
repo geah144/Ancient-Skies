@@ -45,7 +45,7 @@
 
         #sky-title-text {
             font-family: 'Cinzel', serif;
-            font-size: 1.32em;
+            font-size: 1.45em;
             color: #6ba3ff;
             text-transform: uppercase;
             letter-spacing: 3px;
@@ -54,7 +54,7 @@
         }
 
         .sky-tagline {
-            font-size: 0.72em;
+            font-size: 1.01em;
             color: #c8a96e;
             font-style: italic;
             font-weight: 600;
@@ -83,7 +83,7 @@
         .cardinal-direction {
             position: absolute;
             font-family: 'Cinzel', serif;
-            font-size: 2.02rem;
+            font-size: 2.22rem;
             font-variant: small-caps;
             color: rgba(107, 163, 255, 0.4);
             pointer-events: none;
@@ -117,7 +117,7 @@
             border: 1px solid #4a7ba7;
             color: #6ba3ff;
             font-family: 'EB Garamond', Georgia, serif;
-            font-size: 1.1em;
+            font-size: 1.21em;
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -135,7 +135,7 @@
         }
 
         #current-month {
-            font-size: 1.2em;
+            font-size: 1.32em;
             color: #e8e8e8;
             min-width: 160px;
             text-align: center;
@@ -145,7 +145,7 @@
 
         #current-month .month-subtitle {
             display: block;
-            font-size: 0.70em;
+            font-size: 0.77em;
             color: #8899bb;
             font-weight: 400;
             margin-top: 2px;
@@ -157,7 +157,7 @@
             position: relative;
             cursor: pointer;
             color: #6ba3ff;
-            font-size: 1.0em;
+            font-size: 1.1em;
             margin-left: 3px;
             vertical-align: middle;
         }
@@ -173,7 +173,7 @@
             border: 1px solid #4a7ba7;
             border-radius: 6px;
             padding: 10px 12px;
-            font-size: 0.8em;
+            font-size: 0.88em;
             color: #aac4ee;
             line-height: 1.5;
             pointer-events: none;
@@ -218,7 +218,7 @@
         #info-title {
             color: #6ba3ff;
             margin: 0 0 14px;
-            font-size: 1.1em;
+            font-size: 1.21em;
             font-family: 'Cinzel', serif;
         }
 
@@ -226,7 +226,7 @@
             background: none;
             border: none;
             color: #6ba3ff;
-            font-size: 1.3em;
+            font-size: 1.43em;
             cursor: pointer;
             transition: transform 0.3s;
             padding: 0;
@@ -252,7 +252,7 @@
             border-bottom: 2px solid transparent;
             color: #667799;
             font-family: 'EB Garamond', Georgia, serif;
-            font-size: 0.8em;
+            font-size: 1.1em;
             padding: 6px 14px 8px;
             cursor: pointer;
             transition: color 0.2s, border-color 0.2s;
@@ -294,7 +294,7 @@
         .tab-panel h2.month-heading {
             color: #e8e8f8;
             font-family: 'Cinzel', serif;
-            font-size: 1.3em;
+            font-size: 1.43em;
             margin: 0 0 18px;
             padding-bottom: 10px;
             border-bottom: 1px solid #2a2a3e;
@@ -306,7 +306,7 @@
 
         .info-section-label {
             color: #6ba3ff;
-            font-size: 0.75em;
+            font-size: 0.83em;
             text-transform: uppercase;
             letter-spacing: 1.2px;
             font-weight: 600;
@@ -315,7 +315,7 @@
 
         .info-section-body {
             color: #bbb;
-            font-size: 0.9em;
+            font-size: 0.99em;
             line-height: 1.65;
         }
 
@@ -352,7 +352,7 @@
         #view-toggles-header h4 {
             color: #6ba3ff;
             font-family: 'Cinzel', serif;
-            font-size: 0.9em;
+            font-size: 0.99em;
             margin: 0;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -362,7 +362,7 @@
             background: none;
             border: none;
             color: #6ba3ff;
-            font-size: 1.3em;
+            font-size: 1.43em;
             cursor: pointer;
             transition: transform 0.3s;
             padding: 0;
@@ -381,7 +381,7 @@
         #view-toggles-content {
             padding: 15px 20px;
             max-height: 300px;
-            overflow-y: auto;
+            overflow: visible;
             transition: max-height 0.3s, padding 0.3s;
         }
 
@@ -391,12 +391,16 @@
             overflow: hidden;
         }
 
+        #view-toggles:not(.collapsed) {
+            overflow: visible;
+        }
+
         .toggle-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin: 8px 0;
-            font-size: 0.85em;
+            font-size: 0.94em;
         }
 
         .toggle-label {
@@ -461,22 +465,95 @@
             background: rgba(107, 163, 255, 0.5);
         }
 
-        /* You are here — bottom left of sky container */
-        #you-are-here {
+        /* Hint boxes */
+        #hint-constellations {
             position: absolute;
-            bottom: 100px;
-            left: 20px;
-            pointer-events: none;
-            z-index: 50;
+            bottom: 130px;
+            right: 30px;
+            background: #f5e642;
+            color: #1a1a1a;
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 0.97em;
+            font-weight: 600;
+            padding: 10px 14px 10px 14px;
+            border-radius: 8px;
+            z-index: 60;
+            max-width: 240px;
+            line-height: 1.4;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
         }
 
-        #you-are-here-text {
+        #hint-constellations-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #1a1a1a;
+            font-size: 1em;
+            padding: 0;
+            flex-shrink: 0;
+            line-height: 1;
+            margin-top: 1px;
+        }
+
+        #hint-month {
+            position: absolute;
+            bottom: 115px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f5e642;
+            color: #1a1a1a;
             font-family: 'EB Garamond', Georgia, serif;
-            font-size: 0.85em;
-            color: rgba(107, 163, 255, 0.7);
+            font-size: 0.97em;
+            font-weight: 600;
+            padding: 10px 14px;
+            border-radius: 8px;
+            z-index: 60;
+            max-width: 340px;
+            line-height: 1.4;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            white-space: normal;
+            text-align: left;
+        }
+
+        #hint-month-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #1a1a1a;
+            font-size: 1em;
+            padding: 0;
+            flex-shrink: 0;
+            line-height: 1;
+            margin-top: 1px;
+        }
+
+        /* Opening overlay */
+        #opening-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-family: 'EB Garamond', Georgia, serif;
             font-style: italic;
-            letter-spacing: 0.5px;
-            line-height: 1.6;
+            font-size: 2em;
+            color: #c8a96e;
+            line-height: 2.0;
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 1.5s ease;
         }
 
         /* Override d3-celestial styles */
@@ -486,6 +563,9 @@
     </style>
 </head>
 <body>
+    <div id="opening-overlay">
+        <div>Lie down. Gaze upward.<br>You are in Babylon, Mesopotamia.<br>The year is 500 BCE.</div>
+    </div>
     <div id="app-container">
         <!-- Main sky view - full width -->
         <div id="sky-container">
@@ -498,12 +578,7 @@
             <!-- Title overlay - top left -->
             <div id="sky-title-overlay">
                 <div id="sky-title-text">Ancient Skies</div>
-                <div class="sky-tagline">Journey through time to see the stars as ancient cultures saw them</div>
-            </div>
-
-            <!-- You are here — bottom left -->
-            <div id="you-are-here">
-                <span id="you-are-here-text">lying in Babylon,<br>Mesopotamia,<br>gazing at the sky<br>above you in 500 BCE</span>
+                <div class="sky-tagline">Journey through time<br>to see the stars as<br>ancient cultures saw them</div>
             </div>
 
             <!-- Culture info overlay - tabbed panel -->
@@ -566,12 +641,6 @@
                 </div>
                 <div id="view-toggles-content">
                     <div class="toggle-item">
-                        <span class="toggle-label">Month Highlights <span class="info-icon">ⓘ<div class="info-tooltip">Highlights the stars associated with the current Babylonian month's mythology.</div></span></span>
-                        <div class="toggle-switch" data-toggle="monthly-stars">
-                            <div class="toggle-slider"></div>
-                        </div>
-                    </div>
-                    <div class="toggle-item">
                         <span class="toggle-label">Milky Way</span>
                         <div class="toggle-switch" data-toggle="milky-way">
                             <div class="toggle-slider"></div>
@@ -602,6 +671,18 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Hint: constellation names tip -->
+            <div id="hint-constellations">
+                <span>Turn on constellation names in View Options, then click one to learn about it!</span>
+                <button id="hint-constellations-close" aria-label="Dismiss">✕</button>
+            </div>
+
+            <!-- Hint: month navigation tip -->
+            <div id="hint-month">
+                <span>Navigate through the year and watch the skies change! The Learn More section tells you about each month's significance.</span>
+                <button id="hint-month-close" aria-label="Dismiss">✕</button>
             </div>
 
         </div>
@@ -978,11 +1059,6 @@
                 btn.classList.toggle('active', btn.dataset.cultureId === culture.id);
             });
 
-            // Update "you are here" text
-            const eraText = culture.era.replace('~', '');
-            document.getElementById('you-are-here-text').textContent =
-                `you are lying in ${culture.location}, gazing at the sky above you in ${eraText}`;
-
             // Display the sky
             updateSkyView();
 
@@ -1233,7 +1309,7 @@
                     if (viewToggles.constellationNames && visiblePts.length > 0) {
                         const centroidX = visiblePts.reduce((s, p) => s + p[0], 0) / visiblePts.length;
                         const centroidY = visiblePts.reduce((s, p) => s + p[1], 0) / visiblePts.length;
-                        ctx.font = "11px 'Courier Prime', monospace";
+                        ctx.font = "12px 'Courier Prime', monospace";
                         ctx.fillStyle = color.label;
                         ctx.fillText(constellation.name, centroidX + 5, centroidY);
                         drawnLabels.push({ text: constellation.name, x: centroidX + 5, y: centroidY, type: 'constellation', id: constellation.name });
@@ -1269,6 +1345,21 @@
             // 7. Sync month display and tab content with Babylon month 1 (Nisanu)
             updateSkyView();
             updateTabContent();
+
+            // 8. Hint box close buttons
+            document.getElementById('hint-constellations-close').addEventListener('click', function() {
+                document.getElementById('hint-constellations').style.display = 'none';
+            });
+            document.getElementById('hint-month-close').addEventListener('click', function() {
+                document.getElementById('hint-month').style.display = 'none';
+            });
+
+            // 9. Fade out opening overlay after 2.8s
+            setTimeout(function() {
+                const overlay = document.getElementById('opening-overlay');
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 1600);
+            }, 2800);
 
             console.log('Ancient Skies initialized — Babylon, 500 BCE, Nisanu (month 1)');
         });
